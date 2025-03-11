@@ -7,6 +7,7 @@ import { CheckAppointmentServicesInterface } from '../@types/services/CheckAppoi
 import { CreateSchedulingServicesInterface } from '../@types/services/CreateSchedulingServicesInterface';
 import { CreateSchedulingRepository } from '../repository/CreateSchedulingRepository';
 import { CheckAppointmentServices } from './CheckAppointmentServices';
+import { Scheduling } from '../entities/Scheduling';
 
 @injectable()
 export class CreateSchedulingServices implements CreateSchedulingServicesInterface {
@@ -15,15 +16,10 @@ export class CreateSchedulingServices implements CreateSchedulingServicesInterfa
     @inject(CheckAppointmentServices) private checkAppointmentServices: CheckAppointmentServicesInterface
   ) {}
 
-  public async create(name: string, email: string, phone: string, datehours: Date): Promise<QueryResultType> {
+  public async create(scheduling: Scheduling): Promise<QueryResultType> {
     try {
-      await this.checkAppointmentServices.check(datehours);
-      const responseQueryInsertDatabase: QueryResultType = await this.createSchedulingRepository.create(
-        name,
-        email,
-        phone,
-        datehours
-      );
+      await this.checkAppointmentServices.check(scheduling);
+      const responseQueryInsertDatabase: QueryResultType = await this.createSchedulingRepository.create(scheduling);
       return responseQueryInsertDatabase;
     } catch (error) {
       throw error as Error;

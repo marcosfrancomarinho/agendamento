@@ -1,5 +1,6 @@
+import { UserRegister } from '../../entities/UserRegister';
 import { QueryResultType } from './CreateSchedulingRepositoryInterface';
 
 export interface RegisterAdminRepositoryInterface {
-  register(name: string, email: string, password: string): Promise<QueryResultType[]>;
+  register(userRegister:UserRegister): Promise<QueryResultType[]>;
 }

@@ -1,12 +1,13 @@
 import { injectable } from 'tsyringe';
-import { ScheduleDateType } from '../@types/controllers/CreateSchedulingControllersInterface';
-import { LoginUserTypes, VerifyDatasAdapterInterface } from '../@types/utils/VerifyDatasAdapterInterface';
+import { VerifyDatasAdapterInterface } from '../@types/utils/VerifyDatasAdapterInterface';
 import Joi, { NumberSchema, ObjectSchema, StringSchema, ValidationError } from 'joi';
 import { RegisterUserType } from '../@types/controllers/RegisterAdminControllersInterface';
+import { ScheduleDateType } from '../@types/entities/ScheduleDateTypes';
+import { LoginUserTypes } from '../@types/controllers/LoginAdminControllersInterface';
 
 @injectable()
 export class VerifyDatasAdapter implements VerifyDatasAdapterInterface {
-  public async verifyAll(name: string, email: string, phone: string, datehours: Date): Promise<void> {
+  public async verifyAll(name: string, email: string, phone: string): Promise<void> {
     try {
       const schema: ObjectSchema<ScheduleDateType> = Joi.object<ScheduleDateType>({
         name: Joi.string()
@@ -25,22 +26,15 @@ export class VerifyDatasAdapter implements VerifyDatasAdapterInterface {
           .regex(/^\(?\d{2}\)?\s?9?\d{4}-?\d{4}$/)
           .message('O número de telefone não é válido')
           .label('telefone do usuário'),
-        datehours: Joi.string()
-          .trim()
-          .required()
-          .empty()
-          .isoDate()
-          .message('A data com hora é obrigatória e deve ser no formato ISO ex: 2025-02-13T12:40')
-          .label('data e hora do agendamento do usuário'),
       });
-      await schema.validateAsync({ name, email, phone, datehours });
+      await schema.validateAsync({ name, email, phone });
     } catch (error) {
       const { message } = (error as ValidationError).details[0];
       throw new Error(message);
     }
   }
 
-  public async verifyDate(datehours: Date): Promise<void> {
+  public async verifyDate(datehours: string): Promise<void> {
     try {
       const schema: StringSchema<string> = Joi.string()
         .trim()

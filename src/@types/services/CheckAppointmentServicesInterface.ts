@@ -1,3 +1,5 @@
+import { Scheduling } from "../../entities/Scheduling";
+
 export interface CheckAppointmentServicesInterface {
-	check(dateHoursCheduling: Date): Promise<boolean>;
+	check(scheduling: Scheduling): Promise<boolean>;
 }

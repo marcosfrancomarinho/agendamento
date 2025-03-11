@@ -1,8 +1,11 @@
-import { LoginUserTypes } from '../utils/VerifyDatasAdapterInterface';
+import { UserLogin } from '../../entities/UserLogin';
+import { LoginUserTypes } from '../controllers/LoginAdminControllersInterface';
 
 export interface LoginAdminServicesInterface {
-  login(email: string, password: string): Promise<number>;
+  login(userLogin: UserLogin): Promise<number>;
 }
+
+
 export interface ResponseUserRegisterType extends LoginUserTypes {
   id: number;
 }

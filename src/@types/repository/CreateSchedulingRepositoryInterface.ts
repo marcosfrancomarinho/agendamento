@@ -1,4 +1,6 @@
+import { Scheduling } from '../../entities/Scheduling';
+
 export interface CreateSchedulingRepositoryInterface {
-  create(name: string, email: string, phone: string, datehours: Date): Promise<QueryResultType>;
+  create(scheduling: Scheduling): Promise<QueryResultType>;
 }
 export type QueryResultType = { id: number };

@@ -1,25 +1,14 @@
-import { ScheduleDateType } from '../@types/controllers/CreateSchedulingControllersInterface';
+import { ScheduleDateType } from '../@types/entities/ScheduleDateTypes';
 import { CheckAppointmentServicesInterface } from '../@types/services/CheckAppointmentServicesInterface';
+import { Scheduling } from '../entities/Scheduling';
 import { SearchSchedulingRepository } from '../repository/SearchSchedulingRepository';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
 export class CheckAppointmentServices implements CheckAppointmentServicesInterface {
   private readonly SERVICE_TIME: number = 60;
-  private readonly MINUTES_IN_ONE_HOUR: number = 60;
-  private readonly BUSINESS_HOURS_START: number = 8 * this.MINUTES_IN_ONE_HOUR;
-  private readonly BUSINESS_HOURS_END: number = 18 * this.MINUTES_IN_ONE_HOUR;
-  private readonly WEEKEND_DAYS: Set<number> = new Set([0, 6]);
 
   constructor(@inject(SearchSchedulingRepository) private searchSchedulingRepository: SearchSchedulingRepository) {}
-
-  private checkPastSchedule(scheduledDateAndTime: Date): void {
-    const currentDateTime: Date = new Date();
-    currentDateTime.setSeconds(0, 0);
-    if (scheduledDateAndTime.getTime() <= currentDateTime.getTime()) {
-      throw new Error('Não é possível agendar um compromisso no passado.');
-    }
-  }
 
   private addServiceTime(date: Date, multiplier: number): Date {
     const newDate: Date = new Date(date.getTime());
@@ -27,21 +16,7 @@ export class CheckAppointmentServices implements CheckAppointmentServicesInterfa
     return newDate;
   }
 
-  private checkBusinessHours(requestedDateAndTime: Date): void {
-    const day: number = requestedDateAndTime.getDay();
-    const totalMinutes: number =
-      requestedDateAndTime.getHours() * this.MINUTES_IN_ONE_HOUR + requestedDateAndTime.getMinutes();
-
-    if (this.WEEKEND_DAYS.has(day)) {
-      throw new Error('Fechado nos fins de semana. Aberto de segunda a sexta.');
-    }
-    if (totalMinutes < this.BUSINESS_HOURS_START || totalMinutes > this.BUSINESS_HOURS_END) {
-      throw new Error('Os compromissos só podem ser agendados entre 8:00 e 18:00.');
-    }
-  }
-
   private checkAppointmentAvailability(requestedDateAndTime: Date, scheduledDateAndTime: Date): void {
-    scheduledDateAndTime.setSeconds(0, 0);
     const busyStart: Date = this.addServiceTime(scheduledDateAndTime, -1);
     const busyEnd: Date = this.addServiceTime(scheduledDateAndTime, 1);
 
@@ -50,17 +25,13 @@ export class CheckAppointmentServices implements CheckAppointmentServicesInterfa
     }
   }
 
-  public async check(scheduledDateAndTime: Date): Promise<boolean> {
+  public async check(scheduling: Scheduling): Promise<boolean> {
     try {
-      scheduledDateAndTime.setSeconds(0, 0);
-      this.checkPastSchedule(scheduledDateAndTime);
-      this.checkBusinessHours(scheduledDateAndTime);
-
       const responseQuerySearchDatabase: ScheduleDateType[] = await this.searchSchedulingRepository.searchByAll();
       if (responseQuerySearchDatabase.length === 0) return true;
 
       for (const { datehours } of responseQuerySearchDatabase) {
-        this.checkAppointmentAvailability(scheduledDateAndTime, datehours);
+        this.checkAppointmentAvailability(scheduling.properties.datehours, datehours);
       }
       return true;
     } catch (error) {

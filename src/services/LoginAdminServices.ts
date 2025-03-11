@@ -4,6 +4,7 @@ import { LoginAdminRepositoryInterface } from '../@types/repository/LoginAdminRe
 import { LoginAdminRepository } from '../repository/LoginAdminRepository';
 import { EncryptPasswordAdapter } from '../utils/EncryptPasswordAdapter';
 import { EncryptPasswordAdapterInterface } from '../@types/utils/EncryptPasswordAdapterInterface';
+import { UserLogin } from '../entities/UserLogin';
 
 @injectable()
 export class LoginAdminServices implements LoginAdminServicesInterface {
@@ -14,13 +15,20 @@ export class LoginAdminServices implements LoginAdminServicesInterface {
     @inject(EncryptPasswordAdapter) private encryptPasswordAdapter: EncryptPasswordAdapterInterface
   ) {}
 
-  public async login(email: string, password: string): Promise<number> {
+  public async login(userLogin: UserLogin): Promise<number> {
     try {
-      const responseUserRegister: ResponseUserRegisterType[] = await this.loginAdminRepository.login(email);
+      const responseUserRegister: ResponseUserRegisterType[] = await this.loginAdminRepository.login(userLogin);
+
       if (!responseUserRegister || responseUserRegister.length === 0) throw new Error(this.messageError);
-      const [{ password: encryptedPassword, id }]: ResponseUserRegisterType[] = responseUserRegister;
-      const passwordCheckResult: boolean = await this.encryptPasswordAdapter.compare(encryptedPassword, password);
+
+      const [{ password, id }]: ResponseUserRegisterType[] = responseUserRegister;
+
+      const passwordCheckResult: boolean = await this.encryptPasswordAdapter.compare(
+        password,
+        userLogin.properties.password
+      );
       if (!passwordCheckResult) throw new Error(this.messageError);
+
       return id;
     } catch (error) {
       throw error as Error;

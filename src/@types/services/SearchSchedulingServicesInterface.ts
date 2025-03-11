@@ -1,6 +1,7 @@
-import { ScheduleDateType } from '../controllers/CreateSchedulingControllersInterface';
+import { DateHours } from "../../entities/DateHours";
+import { ScheduleDateType } from "../entities/ScheduleDateTypes";
 
 export interface SearchSchedulingServicesInterface {
-  searchByDate(datahours: Date): Promise<ScheduleDateType[]>;
+  searchByDate(datahours: DateHours): Promise<ScheduleDateType[]>;
   searchByAll(): Promise<ScheduleDateType[]>;
 }
