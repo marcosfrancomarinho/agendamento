@@ -4,7 +4,7 @@ import {
   QueryResultType,
 } from '../@types/repository/CreateSchedulingRepositoryInterface';
 import { Database } from '../configs/Database';
-import { Scheduling } from '../entities/Scheduling';
+import { Scheduling } from '../domain/entities/Scheduling';
 
 @injectable()
 export class CreateSchedulingRepository implements CreateSchedulingRepositoryInterface {
@@ -12,9 +12,13 @@ export class CreateSchedulingRepository implements CreateSchedulingRepositoryInt
     'INSERT INTO scheduling_user (name,email, phone, datehours)VALUES($1,$2,$3,$4) RETURNING id';
 
   public async create(scheduling: Scheduling): Promise<QueryResultType> {
-    const { datehours, email, name, phone } = scheduling.properties;
     try {
-      const { rows } = await Database.connection.query<QueryResultType>(this.SQL, [name, email, phone, datehours]);
+      const { rows } = await Database.connection.query<QueryResultType>(this.SQL, [
+        scheduling.properties.name,
+        scheduling.properties.email,
+        scheduling.properties.phone,
+        scheduling.properties.datehours,
+      ]);
       return rows.at(0) as QueryResultType;
     } catch (error) {
       throw error as Error;

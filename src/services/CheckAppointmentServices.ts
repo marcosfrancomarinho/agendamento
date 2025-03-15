@@ -1,6 +1,6 @@
-import { ScheduleDateType } from '../@types/entities/ScheduleDateTypes';
+import { ScheduleDateType } from '../@types/domain/ScheduleDateTypes';
 import { CheckAppointmentServicesInterface } from '../@types/services/CheckAppointmentServicesInterface';
-import { Scheduling } from '../entities/Scheduling';
+import { Scheduling } from '../domain/entities/Scheduling';
 import { SearchSchedulingRepository } from '../repository/SearchSchedulingRepository';
 import { inject, injectable } from 'tsyringe';
 

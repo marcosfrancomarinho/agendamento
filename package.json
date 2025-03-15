@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsx --watch --env-file=.env src/app.ts",
-    "start": "node dist/bundle.min.js",
+    "start": "node --env-file=.env dist/bundle.min.js",
     "build": "node esbuild.config.js",
     "type": "tsc --watch --noEmit",
     "db": "tsx --env-file=.env src/repository/SearchSchedulingRepository.ts"

@@ -38,6 +38,10 @@ export class Router {
 
     app.post('/login-admin', loginAdminControllers.login.bind(loginAdminControllers));
 
-    app.post('/register-admin', registerAdminControllers.register.bind(registerAdminControllers));
+    app.post(
+      '/register-admin',
+      authenticateUserMiddlewares.authenticate.bind(authenticateUserMiddlewares),
+      registerAdminControllers.register.bind(registerAdminControllers)
+    );
   }
 }

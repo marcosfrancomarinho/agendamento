@@ -2,7 +2,8 @@ import { injectable } from 'tsyringe';
 import { RegisterAdminRepositoryInterface } from '../@types/repository/RegisterAdminRepositoryInterface';
 import { Database } from '../configs/Database';
 import { QueryResultType } from '../@types/repository/CreateSchedulingRepositoryInterface';
-import { UserRegister } from '../entities/UserRegister';
+import { UserRegister } from '../domain/entities/UserRegister';
+import { IdUser } from '../domain/value-object/IdUser';
 
 @injectable()
 export class RegisterAdminRepository implements RegisterAdminRepositoryInterface {

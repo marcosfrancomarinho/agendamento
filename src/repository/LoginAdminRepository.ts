@@ -2,7 +2,7 @@ import { injectable } from 'tsyringe';
 import { LoginAdminRepositoryInterface } from '../@types/repository/LoginAdminRepositoryInterface';
 import { Database } from '../configs/Database';
 import { ResponseUserRegisterType } from '../@types/services/LoginAdminServicesInterface';
-import { UserLogin } from '../entities/UserLogin';
+import { UserLogin } from '../domain/entities/UserLogin';
 
 @injectable()
 export class LoginAdminRepository implements LoginAdminRepositoryInterface {

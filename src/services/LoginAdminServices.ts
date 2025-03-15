@@ -4,7 +4,7 @@ import { LoginAdminRepositoryInterface } from '../@types/repository/LoginAdminRe
 import { LoginAdminRepository } from '../repository/LoginAdminRepository';
 import { EncryptPasswordAdapter } from '../utils/EncryptPasswordAdapter';
 import { EncryptPasswordAdapterInterface } from '../@types/utils/EncryptPasswordAdapterInterface';
-import { UserLogin } from '../entities/UserLogin';
+import { UserLogin } from '../domain/entities/UserLogin';
 
 @injectable()
 export class LoginAdminServices implements LoginAdminServicesInterface {

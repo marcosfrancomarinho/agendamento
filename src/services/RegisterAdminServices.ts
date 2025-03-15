@@ -5,7 +5,7 @@ import { EncryptPasswordAdapterInterface } from '../@types/utils/EncryptPassword
 import { RegisterAdminRepository } from '../repository/RegisterAdminRepository';
 import { EncryptPasswordAdapter } from '../utils/EncryptPasswordAdapter';
 import { QueryResultType } from '../@types/repository/CreateSchedulingRepositoryInterface';
-import { UserRegister } from '../entities/UserRegister';
+import { UserRegister } from '../domain/entities/UserRegister';
 
 @injectable()
 export class RegisterAdminServices implements RegisterAdminServicesInterface {
@@ -16,8 +16,11 @@ export class RegisterAdminServices implements RegisterAdminServicesInterface {
 
   public async register(userRegister: UserRegister): Promise<number> {
     try {
-      const encryptedPassword: string = await this.encryptPasswordAdapter.encode(userRegister.properties.password);
+      const encryptedPassword: string = await this.encryptPasswordAdapter.encode(
+        userRegister.properties.password.toString()
+      );
       userRegister.updatePassword(encryptedPassword);
+    
       const [{ id }]: QueryResultType[] = await this.registerAdminRepository.register(userRegister);
       return id;
     } catch (error) {

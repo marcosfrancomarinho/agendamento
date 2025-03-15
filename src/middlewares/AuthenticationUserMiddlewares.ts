@@ -7,6 +7,8 @@ import {
 } from '../@types/utils/AuthenticationTokenAdapterInterface';
 import { AuthenticationTokenAdapter } from '../utils/AuthenticationTokenAdapter';
 
+
+
 @injectable()
 export class AuthenticationUserMiddlewares implements AuthenticationUserMiddlewaresInterface {
   private messageError: string = 'token não foi informado.';

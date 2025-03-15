@@ -1,3 +1,5 @@
+import { IdUser } from "../../domain/value-object/IdUser";
+
 export interface PerfomServiceRepositoryInterface {
-  perform(id: number): Promise<number| null>;
+  perform(idUser:IdUser): Promise<number| null>;
 }

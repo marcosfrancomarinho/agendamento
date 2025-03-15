@@ -1,4 +1,4 @@
-import { UserRegister } from '../../entities/UserRegister';
+import { UserRegister } from '../../domain/entities/UserRegister';
 import { QueryResultType } from './CreateSchedulingRepositoryInterface';
 
 export interface RegisterAdminRepositoryInterface {

@@ -2,8 +2,8 @@ import { inject, injectable } from 'tsyringe';
 import { SearchSchedulingRepositoryInterface } from '../@types/repository/SearchSchedulingRepositoryInterface';
 import { SearchSchedulingServicesInterface } from '../@types/services/SearchSchedulingServicesInterface';
 import { SearchSchedulingRepository } from '../repository/SearchSchedulingRepository';
-import { ScheduleDateType } from '../@types/entities/ScheduleDateTypes';
-import { DateHours } from '../entities/DateHours';
+import { ScheduleDateType } from '../@types/domain/ScheduleDateTypes';
+import { DateHours } from '../domain/value-object/DateHours';
 
 @injectable()
 export class SearchSchedulingServices implements SearchSchedulingServicesInterface {

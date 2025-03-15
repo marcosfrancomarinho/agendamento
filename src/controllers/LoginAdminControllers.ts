@@ -5,8 +5,10 @@ import { VerifyDatasAdapterInterface } from '../@types/utils/VerifyDatasAdapterI
 import { LoginAdminServicesInterface } from '../@types/services/LoginAdminServicesInterface';
 import { LoginAdminServices } from '../services/LoginAdminServices';
 import { AuthenticationTokenAdapter } from '../utils/AuthenticationTokenAdapter';
-import { UserLogin } from '../entities/UserLogin';
+import { UserLogin } from '../domain/entities/UserLogin';
 import { VerifyDatasAdapter } from '../utils/VerifyDatasAdapter';
+import { Email } from '../domain/value-object/Email';
+import { Password } from '../domain/value-object/Password';
 
 @injectable()
 export class LoginAdminControllers implements LoginAdminControllersInterface {
@@ -23,7 +25,10 @@ export class LoginAdminControllers implements LoginAdminControllersInterface {
     try {
       const { email, password } = request.body as LoginUserTypes;
 
-      const userLogin: UserLogin = await UserLogin.create(email, password, this.verifyDatas);
+      const _email: Email = await Email.create(email, this.verifyDatas);
+      const _password: Password = await Password.create(password, this.verifyDatas);
+
+      const userLogin: UserLogin = new UserLogin(_email, _password);
 
       const id: number = await this.loginAdminServices.login(userLogin);
       const token: string = this.authenticationTokenAdapter.genereteHash(id);

@@ -3,8 +3,8 @@ import { SearchSchedulingControllersInterface } from '../@types/controllers/Sear
 import { SearchSchedulingServicesInterface } from '../@types/services/SearchSchedulingServicesInterface';
 import { inject, injectable } from 'tsyringe';
 import { SearchSchedulingServices } from '../services/SearchSchedulingServices';
-import { ScheduleDateType } from '../@types/entities/ScheduleDateTypes';
-import { DateHours } from '../entities/DateHours';
+import { ScheduleDateType } from '../@types/domain/ScheduleDateTypes';
+import { DateHours } from '../domain/value-object/DateHours';
 import { VerifyDatasAdapterInterface } from '../@types/utils/VerifyDatasAdapterInterface';
 import { VerifyDatasAdapter } from '../utils/VerifyDatasAdapter';
 
@@ -18,8 +18,11 @@ export class SearchSchedulingControllers implements SearchSchedulingControllersI
   public async searchByDate(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
       const { datehours } = request.query as unknown as { datehours: string };
+
       const dateHours = await DateHours.create(datehours, this.verifyDatas);
+
       const appointments: ScheduleDateType[] = await this.searchSchedulingServices.searchByDate(dateHours);
+
       response.status(200).json(appointments);
     } catch (error) {
       next(error);

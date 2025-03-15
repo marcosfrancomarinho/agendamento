@@ -7,7 +7,7 @@ import { CheckAppointmentServicesInterface } from '../@types/services/CheckAppoi
 import { CreateSchedulingServicesInterface } from '../@types/services/CreateSchedulingServicesInterface';
 import { CreateSchedulingRepository } from '../repository/CreateSchedulingRepository';
 import { CheckAppointmentServices } from './CheckAppointmentServices';
-import { Scheduling } from '../entities/Scheduling';
+import { Scheduling } from '../domain/entities/Scheduling';
 
 @injectable()
 export class CreateSchedulingServices implements CreateSchedulingServicesInterface {

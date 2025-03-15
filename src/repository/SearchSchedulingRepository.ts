@@ -1,8 +1,8 @@
 import { injectable } from 'tsyringe';
 import { SearchSchedulingRepositoryInterface } from '../@types/repository/SearchSchedulingRepositoryInterface';
 import { Database } from '../configs/Database';
-import { ScheduleDateType } from '../@types/entities/ScheduleDateTypes';
-import { DateHours } from '../entities/DateHours';
+import { ScheduleDateType } from '../@types/domain/ScheduleDateTypes';
+import { DateHours } from '../domain/value-object/DateHours';
 
 @injectable()
 export class SearchSchedulingRepository implements SearchSchedulingRepositoryInterface {
@@ -22,7 +22,7 @@ export class SearchSchedulingRepository implements SearchSchedulingRepositoryInt
 
   public async searchByDate(dateHours: DateHours): Promise<ScheduleDateType[]> {
     try {
-      const { rows } = await Database.connection.query<ScheduleDateType>(this.SQL.DATE, [dateHours.time]);
+      const { rows } = await Database.connection.query<ScheduleDateType>(this.SQL.DATE, [dateHours.value]);
       return rows;
     } catch (error) {
       throw error as Error;

@@ -1,4 +1,4 @@
-import { Scheduling } from '../../entities/Scheduling';
+import { Scheduling } from '../../domain/entities/Scheduling';
 
 export interface CreateSchedulingRepositoryInterface {
   create(scheduling: Scheduling): Promise<QueryResultType>;

@@ -1,3 +1,5 @@
+import { IdUser } from "../../domain/value-object/IdUser";
+
 export interface PerfomServiceServicesInterface {
-  perfom(id: number): Promise<void>;
+  perfom(idUser:IdUser): Promise<void>;
 }

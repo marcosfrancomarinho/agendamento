@@ -1,4 +1,4 @@
-import { UserLogin } from '../../entities/UserLogin';
+import { UserLogin } from '../../domain/entities/UserLogin';
 import { LoginUserTypes } from '../controllers/LoginAdminControllersInterface';
 
 export interface LoginAdminServicesInterface {

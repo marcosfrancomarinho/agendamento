@@ -1,5 +1,5 @@
-import { DateHours } from "../../entities/DateHours";
-import { ScheduleDateType } from "../entities/ScheduleDateTypes";
+import { DateHours } from "../../domain/value-object/DateHours";
+import { ScheduleDateType } from "../domain/ScheduleDateTypes";
 
 export interface SearchSchedulingServicesInterface {
   searchByDate(datahours: DateHours): Promise<ScheduleDateType[]>;
