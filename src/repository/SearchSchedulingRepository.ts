@@ -12,20 +12,12 @@ export class SearchSchedulingRepository implements SearchSchedulingRepositoryInt
   };
 
   public async searchByAll(): Promise<ScheduleDateType[]> {
-    try {
-      const { rows } = await Database.connection.query<ScheduleDateType>(this.SQL.ALL);
-      return rows;
-    } catch (error) {
-      throw error as Error;
-    }
+    const { rows } = await Database.connection.query<ScheduleDateType>(this.SQL.ALL);
+    return rows;
   }
 
   public async searchByDate(dateHours: DateHours): Promise<ScheduleDateType[]> {
-    try {
-      const { rows } = await Database.connection.query<ScheduleDateType>(this.SQL.DATE, [dateHours.value]);
-      return rows;
-    } catch (error) {
-      throw error as Error;
-    }
+    const { rows } = await Database.connection.query<ScheduleDateType>(this.SQL.DATE, [dateHours.value]);
+    return rows;
   }
 }

@@ -5,10 +5,9 @@ export class Password {
 
   public static async create(password: string, verifyDatas: VerifyDatasAdapterInterface): Promise<Password> {
     await verifyDatas.verifyPassword(password);
-    return new Password(password);
+    return new Password(password.trim());
   }
   public get value(): string {
     return this.password;
   }
-
 }

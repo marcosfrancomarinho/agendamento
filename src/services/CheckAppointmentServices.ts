@@ -21,21 +21,16 @@ export class CheckAppointmentServices implements CheckAppointmentServicesInterfa
     const busyEnd: Date = this.addServiceTime(scheduledDateAndTime, 1);
 
     if (requestedDateAndTime.getTime() >= busyStart.getTime() && requestedDateAndTime.getTime() <= busyEnd.getTime()) {
-      throw new Error('Horário do compromisso já está reservado.');
+      throw new Error(`O horário "${requestedDateAndTime}" já está reservado.`);
     }
   }
 
-  public async check(scheduling: Scheduling): Promise<boolean> {
-    try {
-      const responseQuerySearchDatabase: ScheduleDateType[] = await this.searchSchedulingRepository.searchByAll();
-      if (responseQuerySearchDatabase.length === 0) return true;
+  public async check(scheduling: Scheduling): Promise<void> {
+    const responseQuerySearchDatabase: ScheduleDateType[] = await this.searchSchedulingRepository.searchByAll();
+    if (responseQuerySearchDatabase.length === 0) return;
 
-      for (const { datehours } of responseQuerySearchDatabase) {
-        this.checkAppointmentAvailability(scheduling.properties.datehours, datehours);
-      }
-      return true;
-    } catch (error) {
-      throw error as Error;
+    for (const { datehours } of responseQuerySearchDatabase) {
+      this.checkAppointmentAvailability(scheduling.properties.datehours, datehours);
     }
   }
 }

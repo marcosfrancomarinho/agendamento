@@ -7,9 +7,13 @@ import { LoginAdminControllers } from '../controllers/LoginAdminControllers';
 import { AuthenticationUserMiddlewares } from '../middlewares/AuthenticationUserMiddlewares';
 import { RegisterAdminControllers } from '../controllers/RegisterAdminControllers';
 
+
+
+
+
 export class Router {
   public static Initializer(app: Express): void {
-    const authenticateUserMiddlewares = container.resolve(AuthenticationUserMiddlewares);
+    const authenticationUserMiddlewares = container.resolve(AuthenticationUserMiddlewares);
     const createSchedulingControllers = container.resolve(CreateSchedulingControllers);
     const searchSchedulingControllers = container.resolve(SearchSchedulingControllers);
     const perfomServiceControllers = container.resolve(PerfomServiceControllers);
@@ -20,19 +24,19 @@ export class Router {
 
     app.get(
       '/search-scheduler-date',
-      authenticateUserMiddlewares.authenticate.bind(authenticateUserMiddlewares),
+      authenticationUserMiddlewares.authenticate.bind(authenticationUserMiddlewares),
       searchSchedulingControllers.searchByDate.bind(searchSchedulingControllers)
     );
 
     app.get(
       '/search-all-scheduler',
-      authenticateUserMiddlewares.authenticate.bind(authenticateUserMiddlewares),
+      authenticationUserMiddlewares.authenticate.bind(authenticationUserMiddlewares),
       searchSchedulingControllers.searchByAll.bind(searchSchedulingControllers)
     );
 
     app.post(
       '/perfom-service',
-      authenticateUserMiddlewares.authenticate.bind(authenticateUserMiddlewares),
+      authenticationUserMiddlewares.authenticate.bind(authenticationUserMiddlewares),
       perfomServiceControllers.perfom.bind(perfomServiceControllers)
     );
 
@@ -40,7 +44,7 @@ export class Router {
 
     app.post(
       '/register-admin',
-      authenticateUserMiddlewares.authenticate.bind(authenticateUserMiddlewares),
+      authenticationUserMiddlewares.authenticate.bind(authenticationUserMiddlewares),
       registerAdminControllers.register.bind(registerAdminControllers)
     );
   }

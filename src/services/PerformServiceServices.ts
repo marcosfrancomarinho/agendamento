@@ -11,11 +11,7 @@ export class PerfomServiceServices implements PerfomServiceServicesInterface {
   constructor(@inject(PerfomServiceRepository) private perfomServiceRepository: PerfomServiceRepositoryInterface) {}
 
   public async perfom(idUser: IdUser): Promise<void> {
-    try {
-      const isPerfom: number | null = await this.perfomServiceRepository.perform(idUser);
-      if (!isPerfom || isPerfom <= 0) throw new Error(this.messageError);
-    } catch (error) {
-      throw error as Error;
-    }
+    const isPerfom: number | null = await this.perfomServiceRepository.perform(idUser);
+    if (!isPerfom || isPerfom <= 0) throw new Error(this.messageError);
   }
 }

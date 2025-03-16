@@ -5,9 +5,9 @@ export class DateHours {
 
   public static async create(datehours: string, verifyDatas: VerifyDatasAdapterInterface): Promise<DateHours> {
     await verifyDatas.verifyDate(datehours);
-    return new DateHours(new Date(datehours));
+    return new DateHours(new Date(datehours.trim()));
   }
-  
+
   public get value(): Date {
     return this.datehours;
   }

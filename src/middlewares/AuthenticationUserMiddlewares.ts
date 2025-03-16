@@ -1,26 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthenticationUserMiddlewaresInterface } from '../@types/middlewares/AuthenticationUserMiddlewaresInterface';
 import { inject, injectable } from 'tsyringe';
-import {
-  AuthenticationTokenAdapterInterface,
-  HashCheckResponseType,
-} from '../@types/utils/AuthenticationTokenAdapterInterface';
+import { AuthenticationTokenAdapterInterface, HashCheckResponseType } from '../@types/utils/AuthenticationTokenAdapterInterface';
 import { AuthenticationTokenAdapter } from '../utils/AuthenticationTokenAdapter';
-
-
+import { Token } from '../domain/value-object/Token';
 
 @injectable()
 export class AuthenticationUserMiddlewares implements AuthenticationUserMiddlewaresInterface {
-  private messageError: string = 'token não foi informado.';
-
-  constructor(
-    @inject(AuthenticationTokenAdapter) private authenticationTokenAdapter: AuthenticationTokenAdapterInterface
-  ) {}
+  constructor(@inject(AuthenticationTokenAdapter) private authenticationTokenAdapter: AuthenticationTokenAdapterInterface) {}
 
   public async authenticate(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
-      const { token } = request.headers as { token: string };
-      if (!token || token.length === 0) throw new Error(this.messageError);
+      const { token: hash } = request.headers as { token: string };
+      const token: Token = new Token(hash);
       const hashCheckResponse: HashCheckResponseType = this.authenticationTokenAdapter.verifyHash(token);
       response.locals.idUser = hashCheckResponse.idUser;
       next();

@@ -7,23 +7,13 @@ import { DateHours } from '../domain/value-object/DateHours';
 
 @injectable()
 export class SearchSchedulingServices implements SearchSchedulingServicesInterface {
-  constructor(
-    @inject(SearchSchedulingRepository) private searchSchedulingRepository: SearchSchedulingRepositoryInterface
-  ) {}
+  constructor(@inject(SearchSchedulingRepository) private searchSchedulingRepository: SearchSchedulingRepositoryInterface) {}
   public async searchByDate(dateHours: DateHours): Promise<ScheduleDateType[]> {
-    try {
-      const appointments: ScheduleDateType[] = await this.searchSchedulingRepository.searchByDate(dateHours);
-      return appointments;
-    } catch (error) {
-      throw error as Error;
-    }
+    const appointments: ScheduleDateType[] = await this.searchSchedulingRepository.searchByDate(dateHours);
+    return appointments;
   }
   public async searchByAll(): Promise<ScheduleDateType[]> {
-    try {
-      const appointments: ScheduleDateType[] = await this.searchSchedulingRepository.searchByAll();
-      return appointments;
-    } catch (error) {
-      throw error as Error;
-    }
+    const appointments: ScheduleDateType[] = await this.searchSchedulingRepository.searchByAll();
+    return appointments;
   }
 }

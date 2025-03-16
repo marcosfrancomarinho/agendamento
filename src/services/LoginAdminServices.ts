@@ -1,37 +1,38 @@
 import { inject, injectable } from 'tsyringe';
-import { LoginAdminServicesInterface, ResponseUserRegisterType } from '../@types/services/LoginAdminServicesInterface';
+import { LoginAdminServicesInterface } from '../@types/services/LoginAdminServicesInterface';
 import { LoginAdminRepositoryInterface } from '../@types/repository/LoginAdminRepositoryInterface';
 import { LoginAdminRepository } from '../repository/LoginAdminRepository';
 import { EncryptPasswordAdapter } from '../utils/EncryptPasswordAdapter';
 import { EncryptPasswordAdapterInterface } from '../@types/utils/EncryptPasswordAdapterInterface';
 import { UserLogin } from '../domain/entities/UserLogin';
+import { Email } from '../domain/value-object/Email';
+import { Password } from '../domain/value-object/Password';
+import { VerifyDatasAdapterInterface } from '../@types/utils/VerifyDatasAdapterInterface';
+import { VerifyDatasAdapter } from '../utils/VerifyDatasAdapter';
+import { ResponseUserRegisterType } from '../@types/services/RegisterAdminServicesInterface';
+import { IdUser } from '../domain/value-object/IdUser';
 
 @injectable()
 export class LoginAdminServices implements LoginAdminServicesInterface {
-  private messageError: string = 'email ou senha incorreta.';
-
   constructor(
-    @inject(LoginAdminRepository) private loginAdminRepository: LoginAdminRepositoryInterface,
-    @inject(EncryptPasswordAdapter) private encryptPasswordAdapter: EncryptPasswordAdapterInterface
+    @inject(LoginAdminRepository) private loginAdmin: LoginAdminRepositoryInterface,
+    @inject(EncryptPasswordAdapter) private encryptPassword: EncryptPasswordAdapterInterface,
+    @inject(VerifyDatasAdapter) private verifyDatas: VerifyDatasAdapterInterface
   ) {}
 
-  public async login(userLogin: UserLogin): Promise<number> {
-    try {
-      const responseUserRegister: ResponseUserRegisterType[] = await this.loginAdminRepository.login(userLogin);
+  public async login(email: string, password: string): Promise<IdUser> {
+    const _email: Email = await Email.create(email, this.verifyDatas);
+    const _password: Password = await Password.create(password, this.verifyDatas);
+    const userLogin: UserLogin = new UserLogin(_email, _password, this.encryptPassword);
 
-      if (!responseUserRegister || responseUserRegister.length === 0) throw new Error(this.messageError);
+    const responseUserRegister: ResponseUserRegisterType[] = await this.loginAdmin.login(userLogin);
 
-      const [{ password, id }]: ResponseUserRegisterType[] = responseUserRegister;
+    if (!responseUserRegister || responseUserRegister.length === 0) throw new Error('email ou senha incorreta.');
 
-      const passwordCheckResult: boolean = await this.encryptPasswordAdapter.compare(
-        password,
-        userLogin.properties.password
-      );
-      if (!passwordCheckResult) throw new Error(this.messageError);
+    const [{ password: encryptedPassword, id }] = responseUserRegister;
+    await userLogin.comparePassword(encryptedPassword);
 
-      return id;
-    } catch (error) {
-      throw error as Error;
-    }
+    const idUser: IdUser = await IdUser.create(id, this.verifyDatas);
+    return idUser;
   }
 }

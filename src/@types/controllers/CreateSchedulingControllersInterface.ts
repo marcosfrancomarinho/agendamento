@@ -8,3 +8,9 @@ export type MessageSuccessType = {
   message: string;
   idUser: number;
 };
+export type BodySchedulingType = {
+  name: string;
+  email: string;
+  phone: string;
+  datehours: string;
+};

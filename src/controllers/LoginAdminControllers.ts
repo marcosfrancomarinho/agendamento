@@ -1,39 +1,31 @@
 import { Request, Response, NextFunction } from 'express';
 import { LoginAdminControllersInterface, LoginUserTypes } from '../@types/controllers/LoginAdminControllersInterface';
 import { inject, injectable } from 'tsyringe';
-import { VerifyDatasAdapterInterface } from '../@types/utils/VerifyDatasAdapterInterface';
 import { LoginAdminServicesInterface } from '../@types/services/LoginAdminServicesInterface';
 import { LoginAdminServices } from '../services/LoginAdminServices';
 import { AuthenticationTokenAdapter } from '../utils/AuthenticationTokenAdapter';
-import { UserLogin } from '../domain/entities/UserLogin';
-import { VerifyDatasAdapter } from '../utils/VerifyDatasAdapter';
-import { Email } from '../domain/value-object/Email';
-import { Password } from '../domain/value-object/Password';
+import { MessageSuccessType } from '../@types/controllers/CreateSchedulingControllersInterface';
+import { IdUser } from '../domain/value-object/IdUser';
+import { Token } from '../domain/value-object/Token';
 
 @injectable()
 export class LoginAdminControllers implements LoginAdminControllersInterface {
   constructor(
     @inject(LoginAdminServices) private loginAdminServices: LoginAdminServicesInterface,
-    @inject(AuthenticationTokenAdapter) private authenticationTokenAdapter: AuthenticationTokenAdapter,
-    @inject(VerifyDatasAdapter) private verifyDatas: VerifyDatasAdapterInterface
+    @inject(AuthenticationTokenAdapter) private authenticationTokenAdapter: AuthenticationTokenAdapter
   ) {}
 
-  private messageSucess(id: number): { message: string; idUser: number } {
-    return { message: 'usuario logado com sucesso', idUser: id };
+  private messageSucess(idUser: IdUser): MessageSuccessType {
+    return { message: 'usuario logado com sucesso', idUser: idUser.value };
   }
   public async login(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
       const { email, password } = request.body as LoginUserTypes;
 
-      const _email: Email = await Email.create(email, this.verifyDatas);
-      const _password: Password = await Password.create(password, this.verifyDatas);
+      const idUser: IdUser = await this.loginAdminServices.login(email, password);
+      const token: Token = this.authenticationTokenAdapter.genereteHash(idUser);
 
-      const userLogin: UserLogin = new UserLogin(_email, _password);
-
-      const id: number = await this.loginAdminServices.login(userLogin);
-      const token: string = this.authenticationTokenAdapter.genereteHash(id);
-
-      response.status(200).setHeader('token', token).json(this.messageSucess(id));
+      response.status(200).setHeader('token', token.value).json(this.messageSucess(idUser));
     } catch (error) {
       next(error);
     }

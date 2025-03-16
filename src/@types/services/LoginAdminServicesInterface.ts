@@ -1,11 +1,7 @@
-import { UserLogin } from '../../domain/entities/UserLogin';
-import { LoginUserTypes } from '../controllers/LoginAdminControllersInterface';
+import { IdUser } from '../../domain/value-object/IdUser';
 
 export interface LoginAdminServicesInterface {
-  login(userLogin: UserLogin): Promise<number>;
+  login(email: string, password: string): Promise<IdUser>;
 }
 
 
-export interface ResponseUserRegisterType extends LoginUserTypes {
-  id: number;
-}

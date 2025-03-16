@@ -1,4 +1,4 @@
-import { RegisterUserType } from '../../@types/controllers/RegisterAdminControllersInterface';
+import { EncryptPasswordAdapterInterface } from '../../@types/utils/EncryptPasswordAdapterInterface';
 import { Email } from '../value-object/Email';
 import { Name } from '../value-object/Name';
 import { Password } from '../value-object/Password';
@@ -6,11 +6,13 @@ import { Password } from '../value-object/Password';
 export class UserRegister {
   constructor(private name: Name, private email: Email, private password: Password) {}
 
-  public get properties(): RegisterUserType {
-    return { name: this.name.value, email: this.email.value, password: this.password.value };
+  public static async create(name: Name, email: Email, password: Password, encryptPassword: EncryptPasswordAdapterInterface): Promise<UserRegister> {
+    const encryptedPassword: string = await encryptPassword.encode(password.value);
+    const newPassword = new Password(encryptedPassword);
+    return new UserRegister(name, email, newPassword);
   }
-  public updatePassword(password: string): void {
-    if (!password || password.length === 0) throw new Error('senha não foi definida');
-    this.password = new Password(password);
+
+  public get properties(): string[] {
+    return [this.name.value, this.email.value, this.password.value];
   }
 }

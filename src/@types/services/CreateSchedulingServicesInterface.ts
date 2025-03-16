@@ -1,6 +1,5 @@
-import { Scheduling } from '../../domain/entities/Scheduling';
-import { QueryResultType } from '../repository/CreateSchedulingRepositoryInterface';
+import { IdUser } from '../../domain/value-object/IdUser';
 
 export interface CreateSchedulingServicesInterface {
-  create(scheduling: Scheduling): Promise<QueryResultType>;
+  create(name: string, email: string, phone: string, datehours: string): Promise<IdUser>;
 }
