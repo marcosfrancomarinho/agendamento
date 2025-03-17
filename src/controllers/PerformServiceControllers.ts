@@ -11,7 +11,7 @@ import { VerifyDatasAdapter } from '../utils/VerifyDatasAdapter';
 export class PerfomServiceControllers implements PerfomServiceControllersInterface {
   constructor(
     @inject(VerifyDatasAdapter) private verifyDatas: VerifyDatasAdapterInterface,
-    @inject(PerfomServiceServices) private perfomServiceServices: PerfomServiceServicesInterface
+    @inject(PerfomServiceServices) private perfomService: PerfomServiceServicesInterface
   ) {}
 
   private messageSuccess(idUser: IdUser): { message: string } {
@@ -23,7 +23,7 @@ export class PerfomServiceControllers implements PerfomServiceControllersInterfa
 
       const idUser: IdUser = await IdUser.create(id, this.verifyDatas);
 
-      await this.perfomServiceServices.perfom(idUser);
+      await this.perfomService.perfom(idUser);
 
       response.status(200).json(this.messageSuccess(idUser));
     } catch (error) {

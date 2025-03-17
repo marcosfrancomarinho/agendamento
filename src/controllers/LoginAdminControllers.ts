@@ -11,8 +11,8 @@ import { Token } from '../domain/value-object/Token';
 @injectable()
 export class LoginAdminControllers implements LoginAdminControllersInterface {
   constructor(
-    @inject(LoginAdminServices) private loginAdminServices: LoginAdminServicesInterface,
-    @inject(AuthenticationTokenAdapter) private authenticationTokenAdapter: AuthenticationTokenAdapter
+    @inject(LoginAdminServices) private loginAdmin: LoginAdminServicesInterface,
+    @inject(AuthenticationTokenAdapter) private authenticationToken: AuthenticationTokenAdapter
   ) {}
 
   private messageSucess(idUser: IdUser): MessageSuccessType {
@@ -22,8 +22,8 @@ export class LoginAdminControllers implements LoginAdminControllersInterface {
     try {
       const { email, password } = request.body as LoginUserTypes;
 
-      const idUser: IdUser = await this.loginAdminServices.login(email, password);
-      const token: Token = this.authenticationTokenAdapter.genereteHash(idUser);
+      const idUser: IdUser = await this.loginAdmin.login(email, password);
+      const token: Token = this.authenticationToken.genereteHash(idUser);
 
       response.status(200).setHeader('token', token.value).json(this.messageSucess(idUser));
     } catch (error) {

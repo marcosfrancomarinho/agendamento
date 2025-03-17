@@ -1,51 +1,31 @@
 import { Express } from 'express';
 import { container } from 'tsyringe';
 import { CreateSchedulingControllers } from '../controllers/CreateSchedulingControllers';
-import { SearchSchedulingControllers } from '../controllers/SearchSchedulingControlllers';
-import { PerfomServiceControllers } from '../controllers/PerformServiceControllers';
 import { LoginAdminControllers } from '../controllers/LoginAdminControllers';
-import { AuthenticationUserMiddlewares } from '../middlewares/AuthenticationUserMiddlewares';
+import { PerfomServiceControllers } from '../controllers/PerformServiceControllers';
 import { RegisterAdminControllers } from '../controllers/RegisterAdminControllers';
-
-
-
-
+import { SearchSchedulingControllers } from '../controllers/SearchSchedulingControlllers';
+import { AuthenticationUserMiddlewares } from '../middlewares/AuthenticationUserMiddlewares';
 
 export class Router {
   public static Initializer(app: Express): void {
-    const authenticationUserMiddlewares = container.resolve(AuthenticationUserMiddlewares);
-    const createSchedulingControllers = container.resolve(CreateSchedulingControllers);
-    const searchSchedulingControllers = container.resolve(SearchSchedulingControllers);
-    const perfomServiceControllers = container.resolve(PerfomServiceControllers);
-    const loginAdminControllers = container.resolve(LoginAdminControllers);
-    const registerAdminControllers = container.resolve(RegisterAdminControllers);
+    const authenticationUser = container.resolve(AuthenticationUserMiddlewares);
+    const createScheduling = container.resolve(CreateSchedulingControllers);
+    const searchScheduling = container.resolve(SearchSchedulingControllers);
+    const perfomService = container.resolve(PerfomServiceControllers);
+    const loginAdmin = container.resolve(LoginAdminControllers);
+    const registerAdmin = container.resolve(RegisterAdminControllers);
 
-    app.post('/create-scheduler', createSchedulingControllers.create.bind(createSchedulingControllers));
+    app.post('/create-scheduler', createScheduling.create.bind(createScheduling));
 
-    app.get(
-      '/search-scheduler-date',
-      authenticationUserMiddlewares.authenticate.bind(authenticationUserMiddlewares),
-      searchSchedulingControllers.searchByDate.bind(searchSchedulingControllers)
-    );
+    app.get('/search-scheduler-date', authenticationUser.authenticate.bind(authenticationUser), searchScheduling.searchByDate.bind(searchScheduling));
 
-    app.get(
-      '/search-all-scheduler',
-      authenticationUserMiddlewares.authenticate.bind(authenticationUserMiddlewares),
-      searchSchedulingControllers.searchByAll.bind(searchSchedulingControllers)
-    );
+    app.get('/search-all-scheduler', authenticationUser.authenticate.bind(authenticationUser), searchScheduling.searchByAll.bind(searchScheduling));
 
-    app.post(
-      '/perfom-service',
-      authenticationUserMiddlewares.authenticate.bind(authenticationUserMiddlewares),
-      perfomServiceControllers.perfom.bind(perfomServiceControllers)
-    );
+    app.post('/perfom-service', authenticationUser.authenticate.bind(authenticationUser), perfomService.perfom.bind(perfomService));
 
-    app.post('/login-admin', loginAdminControllers.login.bind(loginAdminControllers));
+    app.post('/login-admin', loginAdmin.login.bind(loginAdmin));
 
-    app.post(
-      '/register-admin',
-      authenticationUserMiddlewares.authenticate.bind(authenticationUserMiddlewares),
-      registerAdminControllers.register.bind(registerAdminControllers)
-    );
+    app.post('/register-admin', authenticationUser.authenticate.bind(authenticationUser), registerAdmin.register.bind(registerAdmin));
   }
 }

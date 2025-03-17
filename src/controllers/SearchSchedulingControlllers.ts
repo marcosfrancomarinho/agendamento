@@ -11,7 +11,7 @@ import { VerifyDatasAdapter } from '../utils/VerifyDatasAdapter';
 @injectable()
 export class SearchSchedulingControllers implements SearchSchedulingControllersInterface {
   constructor(
-    @inject(SearchSchedulingServices) private searchSchedulingServices: SearchSchedulingServicesInterface,
+    @inject(SearchSchedulingServices) private searchScheduling: SearchSchedulingServicesInterface,
     @inject(VerifyDatasAdapter) private verifyDatas: VerifyDatasAdapterInterface
   ) {}
 
@@ -21,7 +21,7 @@ export class SearchSchedulingControllers implements SearchSchedulingControllersI
 
       const dateHours = await DateHours.create(datehours, this.verifyDatas);
 
-      const appointments: ScheduleDateType[] = await this.searchSchedulingServices.searchByDate(dateHours);
+      const appointments: ScheduleDateType[] = await this.searchScheduling.searchByDate(dateHours);
 
       response.status(200).json(appointments);
     } catch (error) {
@@ -30,7 +30,7 @@ export class SearchSchedulingControllers implements SearchSchedulingControllersI
   }
   public async searchByAll(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
-      const appointments: ScheduleDateType[] = await this.searchSchedulingServices.searchByAll();
+      const appointments: ScheduleDateType[] = await this.searchScheduling.searchByAll();
       response.status(200).json(appointments);
     } catch (error) {
       next(error);

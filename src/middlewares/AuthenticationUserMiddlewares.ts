@@ -7,13 +7,13 @@ import { Token } from '../domain/value-object/Token';
 
 @injectable()
 export class AuthenticationUserMiddlewares implements AuthenticationUserMiddlewaresInterface {
-  constructor(@inject(AuthenticationTokenAdapter) private authenticationTokenAdapter: AuthenticationTokenAdapterInterface) {}
+  constructor(@inject(AuthenticationTokenAdapter) private authenticationToken: AuthenticationTokenAdapterInterface) {}
 
   public async authenticate(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
       const { token: hash } = request.headers as { token: string };
       const token: Token = new Token(hash);
-      const hashCheckResponse: HashCheckResponseType = this.authenticationTokenAdapter.verifyHash(token);
+      const hashCheckResponse: HashCheckResponseType = this.authenticationToken.verifyHash(token);
       response.locals.idUser = hashCheckResponse.idUser;
       next();
     } catch (error) {

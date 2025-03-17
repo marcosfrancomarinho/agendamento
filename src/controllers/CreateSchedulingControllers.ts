@@ -7,7 +7,7 @@ import { IdUser } from '../domain/value-object/IdUser';
 
 @injectable()
 export class CreateSchedulingControllers implements CreateSchedulingControllersInterface {
-  constructor(@inject(CreateSchedulingServices) private createSchedulingServices: CreateSchedulingServicesInterface) {}
+  constructor(@inject(CreateSchedulingServices) private createScheduling: CreateSchedulingServicesInterface) {}
 
   private messageSuccess(idUser: IdUser): MessageSuccessType {
     return {
@@ -20,7 +20,7 @@ export class CreateSchedulingControllers implements CreateSchedulingControllersI
     try {
       const { name, email, phone, datehours } = request.body as BodySchedulingType;
 
-      const idUser: IdUser = await this.createSchedulingServices.create(name, email, phone, datehours);
+      const idUser: IdUser = await this.createScheduling.create(name, email, phone, datehours);
 
       response.status(201).json(this.messageSuccess(idUser));
     } catch (error) {
